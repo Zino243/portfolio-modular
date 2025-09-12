@@ -11,7 +11,13 @@ import datas from '../data/information.json';
 	<Welcome />
 </Layout> -->
 
-<h1 class="text-3xl font-bold">Mis Proyectos</h1>
+<header>
+  <h1 style={`color: ${datas.colores[1]}`}>{datas.titulo}</h1>
+</header>
+
+
+
+<!-- <h1 class="text-3xl font-bold">Mis Proyectos</h1>
 <ul class="grid gap-4 mt-6">
   {datas.proyectos.map((project, i) => (
     <li class="p-4 border rounded shadow">
@@ -20,4 +26,4 @@ import datas from '../data/information.json';
       </a>
     </li>
   ))}
-</ul>
+</ul> -->
