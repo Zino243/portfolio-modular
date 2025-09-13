@@ -2,9 +2,8 @@
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 import datas from '../data/information.json';
+import '../styles/global.css';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <!-- <Layout>
@@ -13,6 +12,7 @@ import datas from '../data/information.json';
 
 <header>
   <h1 style={`color: ${datas.colores[1]}`}>{datas.titulo}</h1>
+  <h1 class="text-red-700">adios</h1>
 </header>
 
 
