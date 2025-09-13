@@ -1,19 +1,35 @@
 ---
 import "@/styles/global.css";
-import Sidebar from "@/components/Sidebar.astro";
-import Main from "@/components/sidebar/Main.astro";
 import InteractiveArea from "@/components/sidebar/InteractiveArea.jsx";
+import MainHome from "@/components/MainHome.astro";
+import MainColors from "@/components/MainColors.astro";
+import MainTecnologies from "@/components/MainTecnologies.astro";
+import MainProjects from "@/components/MainProjects.astro";
+import MainGallery from "@/components/MainGallery.astro";
+import MainContact from "@/components/MainContact.astro";
+
+// Estado de la página activa. Inicialmente 'home'
+let activePage = 'home';
+
+type Page = 'home' | 'colors' | 'tecnologies' | 'projects' | 'gallery' | 'contact';
 ---
 
 <head>
-    <title>Admin Dashboard - Portfolio</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Portfolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-    <div class="flex min-h-screen">
-    <!-- <Sidebar /> -->
-    <!-- <Main /> -->
-    <InteractiveArea client:load/>
-    </div>
+  <div class="flex min-h-screen">
+    <!-- InteractiveArea recibe una función para actualizar activePage -->
+    <InteractiveArea client:load setActivePage={(page: Page) => activePage = page} />
+    
+    <!-- Aquí se renderiza el Main según el estado -->
+    {activePage === 'home' && <MainHome />}
+    {activePage === 'colors' && <MainColors />}
+    {activePage === 'tecnologies' && <MainTecnologies />}
+    {activePage === 'projects' && <MainProjects />}
+    {activePage === 'gallery' && <MainGallery />}
+    {activePage === 'contact' && <MainContact />}
+  </div>
 </body>

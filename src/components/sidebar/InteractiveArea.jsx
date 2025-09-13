@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import React from 'react';
 
-export default function InteractiveArea() {
-  const [activePage, setActivePage] = useState('home');
+// Definimos el tipo que recibirá la prop
 
+export default function InteractiveArea({ setActivePage }) {
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ marginRight: '20px' }}>
-        <button className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600' onClick={() => setActivePage('home')}>Home</button>
-        <button className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600' onClick={() => setActivePage('profile')}>Profile</button>
-        <button className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600' onClick={() => setActivePage('settings')}>Settings</button>
+    <aside className="w-64 bg-white shadow-md">
+      <div className="p-6">
+        <h1 className="text-xl font-semibold">Portfolio Dashboard</h1>
       </div>
-      <div>
-        {activePage === 'home' && <div>Bienvenido a Home</div>}
-        {activePage === 'profile' && <div>Tu Perfil</div>}
-        {activePage === 'settings' && <div>Configuración</div>}
-      </div>
-    </div>
+      <nav className="mt-6 space-y-2">
+        <button className='flex items-center px-6 py-2 text-gray-700 hover:bg-gray-100' onClick={() => setActivePage('home')}> <span class="mr-3">👤</span> Perfil Personal</button>
+        <button className='flex items-center px-6 py-2 text-gray-700 hover:bg-gray-100' onClick={() => setActivePage('colors')}> <span class="mr-3">🎨</span> Colores</button>
+        <button className='flex items-center px-6 py-2 text-gray-700 hover:bg-gray-100' onClick={() => setActivePage('tecnologies')}> <span class="mr-3">💻</span> Tecnologías</button>
+        <button className='flex items-center px-6 py-2 text-gray-700 hover:bg-gray-100' onClick={() => setActivePage('projects')}> <span class="mr-3">📁</span> Proyectos</button>
+        <button className='flex items-center px-6 py-2 text-gray-700 hover:bg-gray-100' onClick={() => setActivePage('gallery')}> <span class="mr-3">🖼️</span> Galería</button>
+        <button className='flex items-center px-6 py-2 text-gray-700 hover:bg-gray-100' onClick={() => setActivePage('contact')}> <span class="mr-3">📩</span> Contacto</button>
+      </nav>
+    </aside>
   );
 }
