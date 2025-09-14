@@ -1,35 +1,188 @@
 ---
-import "@/styles/global.css";
-import InteractiveArea from "@/components/sidebar/InteractiveArea.jsx";
-import MainHome from "@/components/MainHome.astro";
-import MainColors from "@/components/MainColors.astro";
-import MainTecnologies from "@/components/MainTecnologies.astro";
-import MainProjects from "@/components/MainProjects.astro";
-import MainGallery from "@/components/MainGallery.astro";
-import MainContact from "@/components/MainContact.astro";
-
-// Estado de la página activa. Inicialmente 'home'
-let activePage = 'home';
-
-type Page = 'home' | 'colors' | 'tecnologies' | 'projects' | 'gallery' | 'contact';
+import datos from '@/data/information.json';
+import '@/styles/global.css';
 ---
 
-<head>
-  <title>Admin Dashboard - Portfolio</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body>
-  <div class="flex min-h-screen">
-    <!-- InteractiveArea recibe una función para actualizar activePage -->
-    <InteractiveArea client:load setActivePage={(page: Page) => activePage = page} />
-    
-    <!-- Aquí se renderiza el Main según el estado -->
-    {activePage === 'home' && <MainHome />}
-    {activePage === 'colors' && <MainColors />}
-    {activePage === 'tecnologies' && <MainTecnologies />}
-    {activePage === 'projects' && <MainProjects />}
-    {activePage === 'gallery' && <MainGallery />}
-    {activePage === 'contact' && <MainContact />}
-  </div>
-</body>
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Panel de administración</title>
+  </head>
+  <body class="p-6 max-w-3xl mx-auto font-sans">
+
+    <h1 class="text-2xl font-bold mb-4">Editar datos</h1>
+
+    <form id="formulario" class="grid gap-6">
+
+      <!-- Datos básicos -->
+      <label>
+        Título:
+        <input type="text" name="titulo" value={datos.titulo} class="border p-2 w-full" />
+      </label>
+
+      <label>
+        Perfil:
+        <input type="text" name="perfil" value={datos.perfil} class="border p-2 w-full" />
+      </label>
+
+      <label>
+        Sobre mí:
+        <textarea name="sobre_mi" class="border p-2 w-full">{datos.sobre_mi}</textarea>
+      </label>
+
+      <!-- Proyectos -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-xl font-semibold">Proyectos</h2>
+          <button type="button" id="add-proyecto" class="bg-green-600 text-white px-2 py-1 rounded">Añadir</button>
+        </div>
+        <div id="proyectos-container">
+          {
+            datos.proyectos.map((p, i) => (
+              <fieldset class="border p-3 rounded mb-2" data-index={i}>
+                <legend class="font-bold">{p.titulo}</legend>
+                <input type="text" name={`proyecto-${i}-titulo`} value={p.titulo} placeholder="Título" class="border p-1 w-full mb-1"/>
+                <input type="text" name={`proyecto-${i}-texto1`} value={p.texto1} placeholder="Texto 1" class="border p-1 w-full mb-1"/>
+                <input type="text" name={`proyecto-${i}-texto2`} value={p.texto2} placeholder="Texto 2" class="border p-1 w-full mb-1"/>
+                <label>
+                  <input type="checkbox" name={`proyecto-${i}-publicado`} checked={p.publicado}/> Publicado
+                </label>
+                <button type="button" class="delete-proyecto bg-red-600 text-white px-2 py-1 rounded mt-2">Eliminar</button>
+              </fieldset>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Galería -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-xl font-semibold">Galería</h2>
+          <button type="button" id="add-galeria" class="bg-green-600 text-white px-2 py-1 rounded">Añadir</button>
+        </div>
+        <div id="galeria-container">
+          {
+            datos.galeria.map((g, i) => (
+              <div class="border p-3 mb-2 flex items-center gap-2" data-index={i}>
+                <input type="text" name={`galeria-${i}-src`} value={g.src} placeholder="URL imagen" class="border p-1 flex-1"/>
+                <label>
+                  <input type="checkbox" name={`galeria-${i}-publicado`} checked={g.publicado}/> Publicado
+                </label>
+                <button type="button" class="delete-galeria bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <button type="button" id="guardar" class="bg-blue-600 text-white px-4 py-2 rounded mt-3">Guardar</button>
+    </form>
+
+    <!-- JSON inicial para el cliente -->
+    <script type="application/json" id="initial-data">{JSON.stringify(datos)}</script>
+
+    <script>
+      (() => {
+        // addear contenedor nuevo de proyectos
+        const proyectosContainer = document.getElementById('proyectos-container');
+      })();
+    </script>
+<!-- <script>
+(() => {
+  const proyectosContainer = document.getElementById('proyectos-container');
+  const galeriaContainer = document.getElementById('galeria-container');
+
+  // --- Añadir proyecto ---
+  document.getElementById('add-proyecto').addEventListener('click', () => {
+    const index = proyectosContainer.children.length;
+    const fieldset = document.createElement('fieldset');
+    fieldset.className = 'border p-3 rounded mb-2';
+    fieldset.innerHTML = `
+      <legend class="font-bold">Nuevo Proyecto</legend>
+      <input type="text" name="proyecto-${index}-titulo" placeholder="Título" class="border p-1 w-full mb-1"/>
+      <input type="text" name="proyecto-${index}-texto1" placeholder="Texto 1" class="border p-1 w-full mb-1"/>
+      <input type="text" name="proyecto-${index}-texto2" placeholder="Texto 2" class="border p-1 w-full mb-1"/>
+      <label><input type="checkbox" name="proyecto-${index}-publicado"/> Publicado</label>
+      <button type="button" class="delete-proyecto bg-red-600 text-white px-2 py-1 rounded mt-2">Eliminar</button>
+    `;
+    proyectosContainer.appendChild(fieldset);
+  });
+
+  proyectosContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('delete-proyecto')) {
+      e.target.closest('fieldset').remove();
+    }
+  });
+
+  // --- Añadir imagen galería ---
+  document.getElementById('add-galeria').addEventListener('click', () => {
+    const index = galeriaContainer.children.length;
+    const div = document.createElement('div');
+    div.className = 'border p-3 mb-2 flex items-center gap-2';
+    div.innerHTML = `
+      <input type="text" name="galeria-${index}-src" placeholder="URL imagen" class="border p-1 flex-1"/>
+      <label><input type="checkbox" name="galeria-${index}-publicado"/> Publicado</label>
+      <button type="button" class="delete-galeria bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+    `;
+    galeriaContainer.appendChild(div);
+  });
+
+  galeriaContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('delete-galeria')) {
+      e.target.closest('div').remove();
+    }
+  });
+
+  // --- Guardar ---
+  document.getElementById('guardar').addEventListener('click', async () => {
+    console.log('')
+  const formData = new FormData(document.getElementById('formulario'));
+  const proyectosContainer = document.getElementById('proyectos-container');
+  const galeriaContainer = document.getElementById('galeria-container');
+
+  const nuevo = {
+    titulo: formData.get('titulo') || '',
+    perfil: formData.get('perfil') || '',
+    sobre_mi: formData.get('sobre_mi') || '',
+    proyectos: [],
+    galeria: []
+  };
+
+  [...proyectosContainer.children].forEach((f, i) => {
+    nuevo.proyectos.push({
+      titulo: formData.get(`proyecto-${i}-titulo`) || '',
+      texto1: formData.get(`proyecto-${i}-texto1`) || '',
+      texto2: formData.get(`proyecto-${i}-texto2`) || '',
+      publicado: formData.get(`proyecto-${i}-publicado`) !== null
+    });
+  });
+
+  [...galeriaContainer.children].forEach((d, i) => {
+    nuevo.galeria.push({
+      src: formData.get(`galeria-${i}-src`) || '',
+      publicado: formData.get(`galeria-${i}-publicado`) !== null
+    });
+  });
+
+  try {
+    const res = await fetch('/api/save-json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevo)
+    });
+
+    // Asegúrate de parsear la respuesta JSON
+    const result = await res.json();
+
+    if (result.success) alert('JSON guardado correctamente.');
+    else alert('Error al guardar: ' + result.error);
+  } catch (err) {
+    alert('Error al guardar: ' + err.message);
+  }
+});
+})();
+  </script> -->
+
+  </body>
+</html>
